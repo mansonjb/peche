@@ -1,26 +1,176 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ------------------------------------------------------------------ *
+ *  Wild Carp Chaser — design system (THÈME CLAIR)
+ *  Papier chaud, encre vert-charbon, accent ocre/ambre.
+ *  NB : les noms de tokens sont restés (night/paper/bark…) mais leurs
+ *  valeurs sont désormais claires — voir les commentaires.
+ * ------------------------------------------------------------------ */
+
+@theme {
+  /* Surfaces (clair) */
+  --color-night: #f7f3ec;   /* fond de page (papier chaud) */
+  --color-bark: #ffffff;    /* cartes / surfaces surélevées */
+  --color-bark-2: #f1ebdf;  /* survol / surface alternative */
+  --color-bark-3: #e8e0d1;
+
+  /* Texte (foncé) */
+  --color-paper: #1f2620;   /* texte principal (encre vert-charbon) */
+  --color-mist: #5d665b;    /* texte secondaire */
+  --color-ash: #8b938a;     /* texte estompé */
+
+  /* Accents */
+  --color-amber: #bb6f1a;        /* ocre/ambre — accent principal */
+  --color-amber-bright: #a25f12; /* survol / liens lisibles */
+  --color-moss: #5f7a45;
+  --color-river: #2f7d74;
+
+  /* Lignes */
+  --color-line: #e6dfd1;
+
+  /* Polices (variables injectées par next/font) */
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --breakpoint-xs: 30rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ----------------------------- base ----------------------------- */
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
   }
+
+  body {
+    background-color: var(--color-night);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-amber) 28%, transparent);
+    color: #1a1f1a;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  a { -webkit-tap-highlight-color: transparent; }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* --------------------------- utilities -------------------------- */
+
+/* Grain papier très léger */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-amber);
+}
+
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.link-underline:hover { background-size: 100% 1px; }
+
+/* ---------------------- corps d'article ------------------------- */
+.article-body {
+  font-size: 1.1875rem;
+  line-height: 1.78;
+  color: #353d34;
+}
+.article-body > * + * { margin-top: 1.5em; }
+.article-body p { text-wrap: pretty; }
+
+/* Lettrine */
+.article-body > p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 3.4em;
+  line-height: 0.8;
+  float: left;
+  margin: 0.06em 0.12em 0 0;
+  color: var(--color-amber);
+}
+
+.article-body h2 {
+  font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+  margin-top: 2.4em;
+}
+.article-body h3 { font-size: 1.4rem; margin-top: 2em; }
+
+.article-body a {
+  color: var(--color-amber-bright);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--color-amber) 45%, transparent);
+  text-underline-offset: 3px;
+}
+.article-body a:hover { text-decoration-color: var(--color-amber); }
+
+.article-body strong { color: var(--color-paper); font-weight: 600; }
+.article-body em { font-style: italic; }
+
+.article-body ul,
+.article-body ol { padding-left: 1.4em; }
+.article-body li { margin-top: 0.5em; }
+.article-body ul li::marker { color: var(--color-amber); }
+.article-body ol li::marker { color: var(--color-amber); font-variant-numeric: tabular-nums; }
+
+.article-body blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.2em 0 0.2em 1.4em;
+  border-left: 2px solid var(--color-amber);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.45rem;
+  line-height: 1.5;
+  color: var(--color-paper);
+}
+
+.article-body hr {
+  border: none;
+  height: 1px;
+  margin: 2.6em auto;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, var(--color-line), transparent);
+}
+
+/* Apparition douce */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+.rise { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .rise { animation: none; }
+  html { scroll-behavior: auto; }
 }
