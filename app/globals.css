@@ -1,41 +1,27 @@
 @import "tailwindcss";
 
-/* ------------------------------------------------------------------ *
- *  Wild Carp Chaser — design system (THÈME CLAIR)
- *  Papier chaud, encre vert-charbon, accent ocre/ambre.
- *  NB : les noms de tokens sont restés (night/paper/bark…) mais leurs
- *  valeurs sont désormais claires — voir les commentaires.
- * ------------------------------------------------------------------ */
+/* ================================================================== *
+ *  Wild Carp Chaser — système éditorial (revue / journal), full clair
+ *  Encre sur papier chaud, filets fins, typographie au premier plan.
+ *  Accent ocre employé avec parcimonie.
+ * ================================================================== */
 
 @theme {
-  /* Surfaces (clair) */
-  --color-night: #f7f3ec;   /* fond de page (papier chaud) */
-  --color-bark: #ffffff;    /* cartes / surfaces surélevées */
-  --color-bark-2: #f1ebdf;  /* survol / surface alternative */
-  --color-bark-3: #e8e0d1;
+  --color-paper: #f4f1e9;   /* fond */
+  --color-paper-2: #ebe7db; /* bloc alterné, ponctuel */
+  --color-ink: #1b1a16;     /* texte principal */
+  --color-soft: #56524a;    /* texte secondaire */
+  --color-muted: #847f72;   /* méta discrète */
+  --color-rule: #d9d2c3;    /* filets */
+  --color-accent: #8a5524;  /* ocre — parcimonie */
 
-  /* Texte (foncé) */
-  --color-paper: #1f2620;   /* texte principal (encre vert-charbon) */
-  --color-mist: #5d665b;    /* texte secondaire */
-  --color-ash: #8b938a;     /* texte estompé */
-
-  /* Accents */
-  --color-amber: #bb6f1a;        /* ocre/ambre — accent principal */
-  --color-amber-bright: #a25f12; /* survol / liens lisibles */
-  --color-moss: #5f7a45;
-  --color-river: #2f7d74;
-
-  /* Lignes */
-  --color-line: #e6dfd1;
-
-  /* Polices (variables injectées par next/font) */
-  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-newsreader), Georgia, "Times New Roman", serif;
 
   --breakpoint-xs: 30rem;
 }
 
-/* ----------------------------- base ----------------------------- */
+/* ------------------------------- base ------------------------------ */
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
@@ -44,133 +30,147 @@
   }
 
   body {
-    background-color: var(--color-night);
-    color: var(--color-paper);
-    font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv11";
-  }
-
-  ::selection {
-    background-color: color-mix(in oklab, var(--color-amber) 28%, transparent);
-    color: #1a1f1a;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.65;
   }
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 500;
-    letter-spacing: -0.015em;
-    color: var(--color-paper);
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+  }
+
+  ::selection {
+    background-color: #e4d3bd;
+    color: var(--color-ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-amber);
+    outline: 1.5px solid var(--color-accent);
     outline-offset: 3px;
-    border-radius: 2px;
   }
 
-  a { -webkit-tap-highlight-color: transparent; }
+  a { color: inherit; -webkit-tap-highlight-color: transparent; }
 }
 
-/* --------------------------- utilities -------------------------- */
+/* ---------------------------- utilities ---------------------------- */
 
-/* Grain papier très léger */
-.grain::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.035;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-.eyebrow {
+/* Surtitre / label en petites capitales espacées */
+.kicker {
+  font-family: var(--font-body);
   font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  font-weight: 500;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  font-weight: 600;
-  color: var(--color-amber);
+  color: var(--color-soft);
+}
+.kicker-accent { color: var(--color-accent); }
+
+/* Chapô / chapeau d'introduction */
+.lede {
+  font-family: var(--font-body);
+  font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+  line-height: 1.5;
+  color: var(--color-soft);
+  font-weight: 380;
 }
 
-.link-underline {
-  background-image: linear-gradient(currentColor, currentColor);
-  background-size: 0% 1px;
-  background-position: 0 100%;
-  background-repeat: no-repeat;
-  transition: background-size 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+/* Lien éditorial souligné (le soulignement s'efface au survol) */
+.rule-link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.28em;
+  text-decoration-color: var(--color-rule);
+  transition: text-decoration-color 0.3s ease, color 0.3s ease;
 }
-.link-underline:hover { background-size: 100% 1px; }
+.rule-link:hover {
+  text-decoration-color: var(--color-accent);
+  color: var(--color-accent);
+}
 
-/* ---------------------- corps d'article ------------------------- */
+/* Filet décoratif (séparateur de section) */
+.hairline {
+  height: 1px;
+  background: var(--color-rule);
+  border: 0;
+}
+
+/* Astérisme — séparateur dans les articles */
+.sep {
+  margin: 3rem 0;
+  text-align: center;
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.6em;
+  text-indent: 0.6em;
+}
+
+/* ------------------------- corps d'article ------------------------- */
 .article-body {
-  font-size: 1.1875rem;
-  line-height: 1.78;
-  color: #353d34;
+  font-family: var(--font-body);
+  font-size: 1.26rem;
+  line-height: 1.72;
+  color: #2c2a24;
 }
-.article-body > * + * { margin-top: 1.5em; }
+.article-body > * + * { margin-top: 1.4em; }
 .article-body p { text-wrap: pretty; }
 
-/* Lettrine */
+/* Lettrine sobre */
 .article-body > p:first-of-type::first-letter {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 3.4em;
-  line-height: 0.8;
+  font-size: 3.1em;
+  line-height: 0.78;
   float: left;
-  margin: 0.06em 0.12em 0 0;
-  color: var(--color-amber);
+  margin: 0.05em 0.1em 0 0;
+  color: var(--color-ink);
 }
 
 .article-body h2 {
-  font-size: clamp(1.6rem, 3.4vw, 2.1rem);
-  margin-top: 2.4em;
+  font-size: clamp(1.55rem, 3vw, 2rem);
+  line-height: 1.15;
+  margin-top: 2.2em;
 }
-.article-body h3 { font-size: 1.4rem; margin-top: 2em; }
+.article-body h3 {
+  font-size: 1.4rem;
+  margin-top: 1.8em;
+}
 
 .article-body a {
-  color: var(--color-amber-bright);
+  color: var(--color-ink);
   text-decoration: underline;
-  text-decoration-color: color-mix(in oklab, var(--color-amber) 45%, transparent);
-  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: var(--color-accent);
 }
-.article-body a:hover { text-decoration-color: var(--color-amber); }
+.article-body a:hover { color: var(--color-accent); }
 
-.article-body strong { color: var(--color-paper); font-weight: 600; }
+.article-body strong { font-weight: 600; }
 .article-body em { font-style: italic; }
 
-.article-body ul,
-.article-body ol { padding-left: 1.4em; }
-.article-body li { margin-top: 0.5em; }
-.article-body ul li::marker { color: var(--color-amber); }
-.article-body ol li::marker { color: var(--color-amber); font-variant-numeric: tabular-nums; }
+.article-body ul, .article-body ol { padding-left: 1.3em; }
+.article-body li { margin-top: 0.45em; }
+.article-body ul li::marker { color: var(--color-accent); }
+.article-body ol li::marker { color: var(--color-accent); }
 
 .article-body blockquote {
-  margin-left: 0;
-  margin-right: 0;
-  padding: 0.2em 0 0.2em 1.4em;
-  border-left: 2px solid var(--color-amber);
+  margin: 2em 0;
+  padding: 0;
+  border: 0;
   font-family: var(--font-display);
   font-style: italic;
-  font-size: 1.45rem;
-  line-height: 1.5;
-  color: var(--color-paper);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 3vw, 1.9rem);
+  line-height: 1.32;
+  text-align: center;
+  color: var(--color-ink);
 }
 
-.article-body hr {
-  border: none;
-  height: 1px;
-  margin: 2.6em auto;
-  width: 40%;
-  background: linear-gradient(90deg, transparent, var(--color-line), transparent);
-}
-
-/* Apparition douce */
-@keyframes rise {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: none; }
-}
-.rise { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 @media (prefers-reduced-motion: reduce) {
-  .rise { animation: none; }
   html { scroll-behavior: auto; }
 }

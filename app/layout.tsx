@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Playfair_Display, Newsreader } from "next/font/google";
 import "./globals.css";
 import { site } from "@/lib/site";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
-const fraunces = Fraunces({
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-fraunces",
+  variable: "--font-playfair",
   display: "swap",
   style: ["normal", "italic"],
 });
 
-const inter = Inter({
+const newsreader = Newsreader({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-newsreader",
   display: "swap",
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -57,9 +58,9 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${fraunces.variable} ${inter.variable} antialiased`}
+      className={`${playfair.variable} ${newsreader.variable} antialiased`}
     >
-      <body className="flex min-h-dvh flex-col bg-night text-paper">
+      <body className="flex min-h-dvh flex-col bg-paper text-ink">
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getAllRecits } from "@/lib/recits";
-import { StoryCard } from "@/components/story-card";
+import { IndexRow } from "@/components/recit-list";
 
 export const metadata: Metadata = {
   title: "Récits",
@@ -14,30 +14,28 @@ export default function RecitsPage() {
 
   return (
     <div>
-      <header className="grain relative overflow-hidden border-b border-line">
-        <div className="mx-auto max-w-6xl px-5 pt-32 pb-14 sm:px-8 sm:pt-40">
-          <p className="eyebrow">Le carnet</p>
-          <h1 className="mt-4 font-display text-[clamp(2.4rem,6vw,4rem)] font-medium leading-[1.02] tracking-tight text-paper">
-            Tous les récits
-          </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-mist">
-            Chaque sortie, racontée sans filtre : l'attente, les casses, le doute,
-            et l'adrénaline d'un départ. Du streetfishing parisien aux rivières
-            sauvages.
-          </p>
-          <p className="mt-6 text-sm text-ash">
-            {recits.length} récit{recits.length > 1 ? "s" : ""} ·
-            mis à jour régulièrement
-          </p>
-        </div>
-      </header>
+      <section className="mx-auto max-w-5xl px-5 pb-10 pt-16 sm:px-8 sm:pt-24">
+        <p className="kicker kicker-accent">Le carnet</p>
+        <h1 className="mt-5 font-display text-[clamp(2.6rem,7vw,4.5rem)] font-medium leading-[0.98] tracking-tight">
+          Tous les récits
+        </h1>
+        <p className="lede mt-7 max-w-2xl">
+          Chaque sortie, racontée sans filtre : l'attente, les casses, le doute
+          et l'adrénaline d'un départ. Du streetfishing parisien aux rivières
+          sauvages.
+        </p>
+      </section>
 
-      <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
-        <div className="grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {recits.map((recit) => (
-            <StoryCard key={recit.slug} recit={recit} />
-          ))}
+      <section className="mx-auto max-w-5xl px-5 pb-16 sm:px-8">
+        <div className="flex items-baseline justify-between border-b-2 border-ink pb-3">
+          <span className="kicker text-muted">
+            {recits.length} récit{recits.length > 1 ? "s" : ""}
+          </span>
+          <span className="kicker text-muted">Mis à jour régulièrement</span>
         </div>
+        {recits.map((recit, i) => (
+          <IndexRow key={recit.slug} recit={recit} index={i + 1} />
+        ))}
       </section>
     </div>
   );

@@ -1,55 +1,51 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
-import { CoverArt } from "@/components/cover-art";
 
-/* Figure éditoriale : vraie photo (ratio naturel, sans recadrage) + légende.
- * Repli sur un visuel généré si aucune `src`. */
+/* Figure : photo en pleine largeur de colonne, ratio naturel, légende centrée. */
 function Figure({
   src,
   width,
   height,
   caption,
-  seed = "figure",
 }: {
   src?: string;
   width?: number;
   height?: number;
   caption?: string;
-  seed?: string;
 }) {
   return (
-    <figure className="my-10">
+    <figure className="my-12">
       {src ? (
         <Image
           src={src}
           alt={caption ?? ""}
           width={width ?? 1600}
           height={height ?? 1067}
-          sizes="(max-width: 768px) 100vw, 680px"
-          className="h-auto w-full rounded-xl border border-line bg-bark-2"
+          sizes="(max-width: 768px) 100vw, 720px"
+          className="h-auto w-full"
         />
-      ) : (
-        <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-line bg-bark-2">
-          <CoverArt seed={seed} />
-        </div>
-      )}
+      ) : null}
       {caption && (
-        <figcaption className="mt-3 flex gap-2.5 text-sm text-mist">
-          <span className="mt-[2px] h-4 w-[2px] shrink-0 bg-amber/70" />
-          <span className="italic">{caption}</span>
+        <figcaption className="mx-auto mt-3 max-w-xl text-center font-body text-sm italic text-muted">
+          {caption}
         </figcaption>
       )}
     </figure>
   );
 }
 
-/* Citation mise en avant. */
+/* Citation pleine page. */
 function Pull({ children }: { children: ReactNode }) {
   return (
-    <p className="my-10 font-display text-2xl italic leading-snug text-paper sm:text-3xl">
+    <p className="my-12 text-center font-display text-3xl italic leading-[1.25] sm:text-4xl">
       {children}
     </p>
   );
 }
 
-export const mdxComponents = { Figure, Pull };
+/* Séparateur en astérisme. */
+function Sep() {
+  return <div className="sep">✳ ✳ ✳</div>;
+}
+
+export const mdxComponents = { Figure, Pull, hr: Sep };

@@ -1,41 +1,29 @@
 import Link from "next/link";
-import { Mail, ArrowUpRight } from "lucide-react";
-import { InstagramIcon, YoutubeIcon } from "@/components/social-icons";
 import { site } from "@/lib/site";
-import { HookMark } from "@/components/hook-mark";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative mt-24 overflow-hidden border-t border-line bg-bark">
-      <div className="grain pointer-events-none absolute inset-0" />
-      <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8">
-        <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
-          {/* Marque */}
+    <footer className="mt-28 border-t border-rule">
+      <div className="mx-auto max-w-5xl px-5 sm:px-8">
+        <div className="grid gap-10 py-14 md:grid-cols-[1.6fr_1fr_1fr]">
           <div>
-            <Link href="/" className="flex items-center gap-2.5">
-              <HookMark className="h-6 w-6 text-amber" />
-              <span className="font-display text-base font-semibold uppercase tracking-[0.2em]">
-                Wild Carp Chaser
-              </span>
+            <Link href="/" className="font-display text-2xl tracking-tight">
+              Wild Carp Chaser
             </Link>
-            <p className="mt-5 max-w-sm text-pretty text-mist">
-              Des récits de pêche à la carpe, 100 % authentiques. De la Seine en
+            <p className="mt-4 max-w-xs text-soft">
+              Récits de pêche à la carpe, 100&nbsp;% authentiques. De la Seine en
               plein Paris aux rivières sauvages — sans concession.
             </p>
           </div>
 
-          {/* Navigation */}
           <div>
-            <h3 className="eyebrow mb-4">Explorer</h3>
-            <ul className="space-y-3">
+            <p className="kicker mb-5">Le carnet</p>
+            <ul className="space-y-2.5">
               {site.nav.map((item) => (
                 <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="link-underline text-paper/85 hover:text-paper"
-                  >
+                  <Link href={item.href} className="rule-link text-soft">
                     {item.label}
                   </Link>
                 </li>
@@ -43,40 +31,21 @@ export function SiteFooter() {
             </ul>
           </div>
 
-          {/* Suivre */}
           <div>
-            <h3 className="eyebrow mb-4">Suivre l'aventure</h3>
-            <ul className="space-y-3">
+            <p className="kicker mb-5">Suivre</p>
+            <ul className="space-y-2.5">
               <li>
-                <a
-                  href={site.social.instagram}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group inline-flex items-center gap-2 text-paper/85 hover:text-paper"
-                >
-                  <InstagramIcon className="h-[18px] w-[18px] text-amber" />
+                <a href={site.social.instagram} target="_blank" rel="noreferrer" className="rule-link text-soft">
                   Instagram
-                  <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition group-hover:opacity-100" />
                 </a>
               </li>
               <li>
-                <a
-                  href={site.social.youtube}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group inline-flex items-center gap-2 text-paper/85 hover:text-paper"
-                >
-                  <YoutubeIcon className="h-[18px] w-[18px] text-amber" />
+                <a href={site.social.youtube} target="_blank" rel="noreferrer" className="rule-link text-soft">
                   YouTube
-                  <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition group-hover:opacity-100" />
                 </a>
               </li>
               <li>
-                <a
-                  href={`mailto:${site.author.email}`}
-                  className="group inline-flex items-center gap-2 text-paper/85 hover:text-paper"
-                >
-                  <Mail className="h-[18px] w-[18px] text-amber" />
+                <a href={`mailto:${site.author.email}`} className="rule-link text-soft">
                   Écrire à {site.author.name}
                 </a>
               </li>
@@ -84,11 +53,9 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-3 border-t border-line pt-6 text-sm text-ash sm:flex-row sm:items-center">
-          <p>
-            © {year} {site.name}. Tous droits réservés.
-          </p>
-          <p className="italic">Écrit avec passion, au bord de l'eau.</p>
+        <div className="flex flex-col gap-2 border-t border-rule py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+          <p>© {year} {site.name}</p>
+          <p className="font-display italic">Écrit au bord de l'eau.</p>
         </div>
       </div>
     </footer>

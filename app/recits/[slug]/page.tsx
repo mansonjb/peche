@@ -6,23 +6,11 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import {
-  ArrowLeft,
-  ArrowRight,
-  Clock,
-  Calendar,
-  MapPin,
-  Mail,
-} from "lucide-react";
-import { InstagramIcon } from "@/components/social-icons";
-import {
   getRecitBySlug,
   getRecitSlugs,
   getAdjacentRecits,
 } from "@/lib/recits";
 import { mdxComponents } from "@/components/mdx";
-import { CoverArt } from "@/components/cover-art";
-import { HookMark } from "@/components/hook-mark";
-import { ReadingProgress } from "@/components/reading-progress";
 import { site } from "@/lib/site";
 import { formatDate } from "@/lib/utils";
 
@@ -74,67 +62,50 @@ export default async function RecitPage({ params }: Params) {
 
   return (
     <article>
-      <ReadingProgress />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* ----------------------- EN-TÊTE PHOTO ----------------------- */}
-      <header className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          {recit.cover ? (
+      {/* ----------------------- EN-TÊTE ----------------------- */}
+      <header className="mx-auto max-w-3xl px-5 pt-14 sm:px-8 sm:pt-20">
+        <Link
+          href="/recits"
+          className="kicker text-muted transition-colors hover:text-ink"
+        >
+          ← Le carnet
+        </Link>
+
+        <p className="kicker kicker-accent mt-9">{recit.category}</p>
+        <h1 className="mt-4 font-display text-[clamp(2.1rem,6vw,4rem)] font-medium leading-[1.02] tracking-tight">
+          {recit.title}
+        </h1>
+        <p className="lede mt-6">{recit.excerpt}</p>
+        <p className="mt-7 text-sm text-muted">
+          Par {site.author.name} — {formatDate(recit.date)} —{" "}
+          {recit.readingMinutes} min
+          {recit.location ? ` — ${recit.location}` : ""}
+        </p>
+      </header>
+
+      {/* ----------------------- PHOTO ------------------------ */}
+      {recit.cover && (
+        <figure className="mx-auto mt-10 max-w-4xl px-5 sm:px-8">
+          <div className="relative aspect-[16/9] w-full overflow-hidden">
             <Image
               src={recit.cover}
               alt={recit.title}
               fill
               priority
-              sizes="100vw"
-              className="object-cover object-center"
+              sizes="(max-width: 1024px) 100vw, 896px"
+              className="object-cover"
             />
-          ) : (
-            <CoverArt seed={recit.slug} />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/60 to-black/55" />
-        </div>
-
-        <div className="mx-auto max-w-3xl px-5 pt-32 pb-16 sm:pt-40">
-          <Link
-            href="/recits"
-            className="group inline-flex items-center gap-2 text-sm text-white/80 transition-colors hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-            Tous les récits
-          </Link>
-
-          <p className="mt-8 text-xs font-semibold uppercase tracking-[0.22em] text-[#e9b36b]">
-            {recit.category}
-          </p>
-          <h1 className="mt-4 font-display text-[clamp(2rem,5.5vw,3.5rem)] font-medium leading-[1.04] tracking-tight text-white">
-            {recit.title}
-          </h1>
-
-          <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/85">
-            <span className="inline-flex items-center gap-1.5">
-              <Calendar className="h-4 w-4 text-[#e9b36b]" />
-              {formatDate(recit.date)}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Clock className="h-4 w-4 text-[#e9b36b]" />
-              {recit.readingMinutes} min de lecture
-            </span>
-            {recit.location && (
-              <span className="inline-flex items-center gap-1.5">
-                <MapPin className="h-4 w-4 text-[#e9b36b]" />
-                {recit.location}
-              </span>
-            )}
           </div>
-        </div>
-      </header>
+        </figure>
+      )}
 
       {/* ------------------------ CORPS ------------------------ */}
-      <div className="mx-auto max-w-[680px] px-5 py-14">
+      <div className="mx-auto max-w-[680px] px-5 py-12 sm:px-8">
         <div className="article-body">
           <MDXRemote
             source={recit.content}
@@ -148,69 +119,46 @@ export default async function RecitPage({ params }: Params) {
           />
         </div>
 
-        {/* tags */}
         {recit.tags.length > 0 && (
-          <div className="mt-12 flex flex-wrap gap-2 border-t border-line pt-8">
-            {recit.tags.map((t) => (
-              <span
-                key={t}
-                className="rounded-full border border-line bg-bark px-3 py-1 text-xs text-mist"
-              >
-                #{t}
-              </span>
-            ))}
-          </div>
+          <p className="kicker mt-12 border-t border-rule pt-6 text-muted">
+            Classé sous — {recit.tags.join(", ")}
+          </p>
         )}
 
-        {/* signature auteur */}
-        <div className="mt-10 flex flex-col gap-4 rounded-2xl border border-line bg-bark p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full border border-amber/40 bg-bark-2">
-              <HookMark className="h-6 w-6 text-amber" />
-            </span>
-            <div>
-              <p className="font-display text-lg text-paper">
-                Écrit par {site.author.name}
-              </p>
-              <p className="text-sm text-mist">
-                Aimé ce récit ? Écris-moi, ça fait toujours plaisir.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
+        <div className="mt-8 border-t border-rule pt-6">
+          <p className="font-display text-xl italic">
+            Écrit par {site.author.name}, au bord de l'eau.
+          </p>
+          <p className="mt-2 text-soft">
+            Aimé ce récit ?{" "}
             <a
               href={site.social.instagram}
               target="_blank"
               rel="noreferrer"
-              aria-label="Instagram"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-mist transition-colors hover:border-amber/60 hover:text-amber"
+              className="rule-link"
             >
-              <InstagramIcon className="h-[18px] w-[18px]" />
+              Instagram
+            </a>{" "}
+            ·{" "}
+            <a href={`mailto:${site.author.email}`} className="rule-link">
+              écris-moi
             </a>
-            <a
-              href={`mailto:${site.author.email}`}
-              aria-label="Email"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-mist transition-colors hover:border-amber/60 hover:text-amber"
-            >
-              <Mail className="h-[18px] w-[18px]" />
-            </a>
-          </div>
+            .
+          </p>
         </div>
       </div>
 
       {/* --------------------- PRÉC. / SUIV. ------------------- */}
       {(prev || next) && (
-        <nav className="mx-auto max-w-6xl px-5 pb-4 sm:px-8">
-          <div className="grid gap-4 border-t border-line pt-10 sm:grid-cols-2">
+        <nav className="mx-auto max-w-5xl px-5 pb-6 sm:px-8">
+          <div className="grid border-t border-rule sm:grid-cols-2">
             {prev ? (
               <Link
                 href={`/recits/${prev.slug}`}
-                className="group rounded-2xl border border-line bg-bark p-6 shadow-sm transition-colors hover:border-amber/40"
+                className="group border-b border-rule py-7 sm:border-b-0 sm:border-r sm:pr-8"
               >
-                <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-mist">
-                  <ArrowLeft className="h-3.5 w-3.5" /> Récit précédent
-                </span>
-                <p className="mt-2 font-display text-lg text-paper transition-colors group-hover:text-amber">
+                <span className="kicker text-muted">← Récit précédent</span>
+                <p className="mt-2 font-display text-xl transition-colors group-hover:text-accent">
                   {prev.title}
                 </p>
               </Link>
@@ -220,12 +168,10 @@ export default async function RecitPage({ params }: Params) {
             {next && (
               <Link
                 href={`/recits/${next.slug}`}
-                className="group rounded-2xl border border-line bg-bark p-6 text-right shadow-sm transition-colors hover:border-amber/40"
+                className="group py-7 sm:pl-8 sm:text-right"
               >
-                <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-mist">
-                  Récit suivant <ArrowRight className="h-3.5 w-3.5" />
-                </span>
-                <p className="mt-2 font-display text-lg text-paper transition-colors group-hover:text-amber">
+                <span className="kicker text-muted">Récit suivant →</span>
+                <p className="mt-2 font-display text-xl transition-colors group-hover:text-accent">
                   {next.title}
                 </p>
               </Link>
